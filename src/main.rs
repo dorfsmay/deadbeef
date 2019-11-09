@@ -4,7 +4,8 @@ use std::io::{BufRead, BufReader, Seek, SeekFrom};
 use std::time::Instant;
 
 fn main() -> std::io::Result<()> {
-    let funcs: &[&dyn Fn(&mut _) -> (&str, u32)] = &[&with_match, &with_hash, &with_btree];
+    let funcs: &[&dyn Fn(&mut _) -> (&str, u32)] =
+        &[&with_match, &with_hash, &with_btree, &hash_with_capacity];
 
     let f = &File::open("/usr/share/dict/words")?;
     let reader = &mut BufReader::new(f);
@@ -80,6 +81,30 @@ fn with_match<R: BufRead>(reader: &mut R) -> (&str, u32) {
         if word.len() > 2 {
             counter += 1;
         }
+    }
+    (description, counter)
+}
+
+fn hash_with_capacity<R: BufRead>(reader: &mut R) -> (&str, u32) {
+    let description = "reusing single HashSet";
+    let hexash: HashSet<u8> = [
+        b'A', b'B', b'C', b'D', b'E', b'F', b'a', b'b', b'c', b'd', b'e', b'f',
+    ]
+    .iter()
+    .cloned()
+    .collect();
+    let mut counter = 0;
+
+    for line in reader.lines() {
+        let word = line.unwrap();
+        let mut h: HashSet<u8> = HashSet::with_capacity(100);
+        for e in word.bytes() {
+            h.insert(e);
+        }
+        if word.len() > 2 && h.is_subset(&hexash) {
+            counter += 1;
+        }
+        h.clear();
     }
     (description, counter)
 }
