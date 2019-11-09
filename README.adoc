@@ -1,0 +1,10 @@
+== deadbeef: Playing with Rust and set performance
+
+Based on https://twitter.com/timClicks[Tim McNamara]'s blog: https://dev.to/timclicks/deadbeef-just-say-no-let-s-learn-to-build-a-small-rust-app-to-find-out-what-words-can-you-spell-with-the-letters-a-f-47em[Deadbeef? Just say]
+
+My first reaction when reading Tim's blog was that if I were asked to to this on the spot I'd use Python and definitely use https://docs.python.org/3.8/library/stdtypes.html#set-types-set-frozenset[a set], so decided to check what would happen when applying this strategy to Rust.
+
+=== Branches
+In order to be able to tweak and play with different approaches the code in split into branches:
+
+
